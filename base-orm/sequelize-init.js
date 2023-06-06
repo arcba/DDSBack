@@ -4,6 +4,37 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = new Sequelize("sqlite:" + process.env.base);
 
 
+const clientes = sequelize.define(
+  "clientes",
+  {
+    IdCliente: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    ApellidoYNombre: {
+      type: DataTypes.STRING(60),
+      allowNull: false
+    },
+    DNI: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    // pasar a mayusculas
+    hooks: {
+      beforeValidate: function (clientes, options) {
+        if (typeof clientes.ApellidoYNombre === "string") {
+          clientes.ApellidoYNombre = clientes.ApellidoYNombre.toUpperCase().trim();
+        }
+      },
+    },
+
+    timestamps: false,
+  }
+);
+
 const articulos = sequelize.define(
   "articulos",
   {
@@ -102,4 +133,5 @@ const articulos = sequelize.define(
 module.exports = {
   sequelize,
   articulos,
+  clientes,
 };
